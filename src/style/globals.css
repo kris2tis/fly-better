@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #ef394e;
+  --light: #ffebee;
+  --surface: #ffffff;
+  --main: #1f2937;
+  --muted: #6b7280;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-light: var(--light);
+  --color-main: var(--main);
+  --color-muted: var(--muted);
+}
+
+body {
+  min-height: max(884px, 100dvh);
+  font-family: var(--yekan-font);
+  font-weight: 400;
+  background-color: var(--surface);
+  color: var(--main);
+}
+
+@layer base {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  input {
+    @apply border-main  focus:outline-hidden rounded-sm border px-2 py-1 focus:border-2 focus:border-primary focus:shadow-2xl focus:shadow-primary;
+  }
+  select {
+    @apply bg-main;
+  }
+  option {
+    @apply text-light;
+  }
+  a {
+    @apply cursor-pointer;
+  }
+  button {
+    @apply cursor-pointer;
+  }
+  .toaster {
+    @apply cursor-grab;
+  }
+}
