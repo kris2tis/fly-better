@@ -31,7 +31,7 @@ export default function Header() {
         <div className=" flex items-center justify-between gap-10">
           <BackButton />
 
-          {/* <nav className="hidden lg:flex items-center gap-8 text-xs">
+          <nav className="hidden lg:flex items-center gap-8 text-xs">
             {["پروازها", "هتل‌ها", "قطارها", "پشتیبانی"].map((item) => (
               <a
                 key={item}
@@ -41,7 +41,7 @@ export default function Header() {
                 {item}
               </a>
             ))}
-          </nav> */}
+          </nav>
         </div>
 
         <Button className="hidden lg:block" variant="secondary">
