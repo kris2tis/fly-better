@@ -1,5 +1,8 @@
-import SearchFlightForm from "@/features/flight/components/search-flight-form";
-
+import HeroSection from "../../features/home/components/hero-section";
 export default function Page() {
-  return <SearchFlightForm />;
+  return (
+    <>
+      <HeroSection />
+    </>
+  );
 }

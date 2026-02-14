@@ -1,5 +1,5 @@
 import BookForm from "@/features/flight/components/book-form";
-import { getFlight } from "@/shared/function/hellpers";
+import { getFlight } from "@/shared/function/services";
 
 export default async function Page({ params }) {
   const { id } = await params;

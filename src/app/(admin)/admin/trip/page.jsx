@@ -1,5 +1,5 @@
-"use client";
-import RouteForm from "@/features/route/route-form";
+import TripForm from "@/features/trip/trip-form";
+
 export default function Page() {
-  return <RouteForm />;
+  return <TripForm />;
 }

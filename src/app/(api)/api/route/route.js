@@ -1,4 +1,4 @@
-import { addRoute } from "@/app/services/route.services";
+import { addRoute } from "../../services/route.services";
 
 export async function POST(req) {
   const body = await req.json();

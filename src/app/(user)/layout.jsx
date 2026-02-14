@@ -1,11 +1,10 @@
-import Header from "@/shared/components/layouts/header";
-import React from "react";
+import Header from "../../shared/components/layouts/header";
 
 export default function Layout({ children }) {
   return (
-    <div>
+    <>
       <Header />
-      {children}
-    </div>
+      <main className="max-w-7xl min-h-[400px] mx-auto py-5">{children}</main>
+    </>
   );
 }

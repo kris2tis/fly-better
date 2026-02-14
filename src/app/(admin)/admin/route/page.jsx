@@ -1,8 +1,8 @@
 "use client";
 
-import { app } from "@/httpServices";
-import React from "react";
+import { http } from "@/httpServices";
 import { toast } from "sonner";
+
 export default function page() {
   return (
     <form
@@ -15,7 +15,7 @@ export default function page() {
 
         };
         try {
-          const { message } = await app
+          const { message } = await http
             .post("/route", data)
             .then(({ data }) => data);
           toast.success(message);

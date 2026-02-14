@@ -1,146 +1,134 @@
 "use client";
 
-import { app } from "@/httpServices";
-import { useState } from "react";
+import { http } from "@/httpServices";
+import Button from "@/shared/components/ui/button";
+import RHFTextField from "@/shared/components/ui/RHFTextField";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import RHFSelect from "./ui/RHFSelect";
+import { SelectItem } from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { addTravelerSchema } from "../helpers/function";
+import { FlightInformation } from "./flight-information";
+import { memo } from "react";
+import { countryList } from "../../../shared/assets";
 
 export default function BookForm({ data }) {
-  const { register, handleSubmit } = useForm();
-  const [travlerInfo, setTravlerInfo] = useState(null);
-  const [step, setStep] = useState(1);
-
-  const renderStep = (step) => {
-    switch (step) {
-      case 1:
-        return (
-          <TravelerInformation
-            handleSubmit={handleSubmit}
-            register={register}
-            setStep={() => setStep((prev) => prev + 1)}
-            setTraveler={(data) => setTravlerInfo(data)}
-          />
-        );
-      case 2:
-        return (
-          <Payment
-            handleSubmit={async () => {
-              await submitReserveTrip();
-            }}
-            data={data}
-          />
-        );
-      case 3:
-        return <ReceiveTicket data={travlerInfo} />;
-      default:
-        break;
-    }
-  };
-
-  const submitReserveTrip = async () => {
-    const bodyData = { travler: travlerInfo, tripId: data.tripId };
-    try {
-      const message = await app
-        .post("/reservation", bodyData)
-        .then(({ data }) => data.data);
-      toast.success(message);
-      setStep((prev) => prev + 1);
-    } catch (error) {
-      console.log(error);
-      toast.error(error?.response?.data?.message || "خطا");
-    }
-  };
-  return <div className="flex flex-col gap-y-3">{renderStep(step)}</div>;
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(addTravelerSchema), mode: "all" });
+  return (
+    <div className="flex flex-col gap-y-3">
+      <FlightInformation data={data} />
+      <TravelerInformation
+        data={data}
+        handleSubmit={handleSubmit}
+        register={register}
+        control={control}
+        errors={errors}
+        setStep={() => setStep((prev) => prev + 1)}
+        setTraveler={(data) => setTravlerInfo(data)}
+      />
+    </div>
+  );
 }
 
 const TravelerInformation = ({
   register,
   handleSubmit,
-  setStep,
-  setTraveler,
+  data,
+  control,
+  errors,
 }) => {
-  const submitReserveTrip = async (data) => {
-    setStep();
-    setTraveler(data);
+  const { push } = useRouter();
+  const submitCreateTraveler = async (travlerData) => {
+    const bodyData = { travler: travlerData, tripId: data.tripId };
+
+    try {
+      const {
+        data: { orderId },
+        message,
+      } = await http.post("/order", bodyData).then(({ data }) => data);
+      toast.success(message);
+
+      push(`/pay/${orderId}`);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "خطا");
+    }
   };
+
   return (
-    <>
-      <div className="border border-gray-500 rounded-md p-5">
-        <div className="flex flex-col gap-y-3 ">
-          <span>13:30</span>
-          <span>قم</span>
-        </div>
-        <div className="w-1 h-20 my-3 bg-gray-500 rounded-md"></div>
-        <div className="flex flex-col gap-y-3 ">
-          <span>2:30</span>
-          <span>تهران</span>
+    <form onSubmit={handleSubmit(submitCreateTraveler)}>
+      <div className="grid grid-cols-3 gap-4">
+        <RHFTextField
+          errors={errors}
+          register={register}
+          label={"نام به لاتین"}
+          name={"name"}
+        />
+        <RHFTextField
+          errors={errors}
+          register={register}
+          label={"نام خانوادگی به لاتین"}
+          name={"lastName"}
+        />
+        <RHFTextField
+          errors={errors}
+          register={register}
+          label={"تاریخ تولد"}
+          name={"dateOfBirth"}
+          type="date"
+        />
+        <RHFSelect
+          control={control}
+          className="rounded-2xl"
+          errors={errors}
+          name={"gender"}
+          label={"جنسیت"}
+          showedLabel={true}
+        >
+          {[
+            { id: 1, title: "مرد", value: "male" },
+            { id: 2, title: "زن", value: "fmale" },
+          ].map((val) => (
+            <SelectItem key={val.id} value={val.value}>
+              {val.title}
+            </SelectItem>
+          ))}
+        </RHFSelect>
+        <CountryList control={control} errors={errors} />
+      </div>
+      <div className="w-full fixed z-fixed bottom-0 left-0 right-0 flex justify-center items-center transition-transform bg-white shadow-2md shadow-gray-900 lg:static lg:items-start lg:col-span-2">
+        <div className="flex flex-row-reverse items-center justify-between lg:flex-col w-full border lg:border-0 p-3 lg:rounded-2xl">
+          <span className="lg:hidden">{data.price.toLocaleString()}</span>
+          <Button className="w-max lg:w-full mt-2" variant="primary">
+            ادامه
+          </Button>
         </div>
       </div>
-
-      {/* Traveler Form */}
-      <form onSubmit={handleSubmit(submitReserveTrip)}>
-        <div className="grid grid-cols-3 gap-4">
-          <input
-            {...register("name")}
-            type="text"
-            name="name"
-            placeholder="نام به لاتین"
-          />
-          <input
-            {...register("lastName")}
-            type="text"
-            name="lastName"
-            placeholder="نام خانوادگی به لاتین"
-          />
-          <input
-            {...register("dateOfBirth")}
-            type="date"
-            name="dateOfBirth"
-            placeholder="تاریخ تولد"
-          />
-          <select {...register("gender")} name="gender">
-            <option value="men">مرد</option>
-            <option value="women">زن</option>
-          </select>
-          <input
-            {...register("nationality")}
-            type="text"
-            name="nationality"
-            placeholder="ملیت"
-          />
-        </div>
-        <button>رزرو</button>
-      </form>
-    </>
-  );
-};
-
-const Payment = ({ data, handleSubmit }) => {
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit();
-      }}
-    >
-      <div className="flex flex-col gap-y-3">
-        <span>مبلغ قابل پرداخت</span>
-        <span>{data.price.toLocaleString()}</span>
-      </div>
-      <button>پرداخت</button>
     </form>
   );
 };
 
-const ReceiveTicket = ({ data }) => {
+const CountryList = memo(function CountryList({ control, errors }) {
   return (
-    <div className="flex flex-col gap-y-3">
-      <span className="my-3">اطلاعات بلیط شما</span>
-      <div>{data?.name}</div>
-      <div>{data?.lastName}</div>
-      <div>{data?.dateOfBirth}</div>
-      <div>{data?.gender}</div>
-      <div>{data?.nationality}</div>
-    </div>
+    <RHFSelect
+      control={control}
+      className="rounded-2xl"
+      errors={errors}
+      name={"nationality"}
+      label={"ملیت"}
+      showedLabel={true}
+    >
+      {countryList.map((val) => (
+        <SelectItem key={val.id} value={val.name}>
+          {val.name_fa}
+        </SelectItem>
+      ))}
+    </RHFSelect>
   );
-};
+});

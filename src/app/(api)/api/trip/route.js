@@ -1,4 +1,4 @@
-import { addTrip } from "@/app/services/trip.services";
+import { addTrip } from "../../services/trip.services";
 
 export async function POST(req) {
      const body = await req.json();

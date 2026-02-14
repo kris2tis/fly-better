@@ -5,10 +5,9 @@ import localFont from "next/font/local";
 
 export const yekanBakh = localFont({
   src: [
-    { path: "../../public/YekanBakh-regular.ttf", weight: "800" },
-    { path: "../../public/YekanBakh-regular.ttf", weight: "700" },
-    { path: "../../public/YekanBakh-Black.ttf", weight: "600" },
-    { path: "../../public/YekanBakh-regular.ttf", weight: "400" },
+    { path: "../../public/YekanBakh-regular.ttf", weight: "300" },
+    { path: "../../public/YekanBakh-Black.ttf", weight: "700" },
+    { path: "../../public/YekanBakh-Bold.ttf", weight: "600" },
   ],
   variable: "--yekan-font",
 });
@@ -22,7 +21,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${yekanBakh.variable} flex flex-col font-display overflow-x-hidden`}
       >
-        <main className="py-2 px-3">
+        <main className="pb-2 px-3">
           <Providers>{children}</Providers>
           <Toaster
             style={{ fontFamily: "inherit" }}

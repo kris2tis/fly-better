@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const http = axios.create({
+const app = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API_URL,
   withCredentials: true,
 });
 
-export const app = { post: http.post,get:http.get };
+export const http = { post: app.post,get:app.get , put : app.put};

@@ -18,7 +18,7 @@ model Route {
   origin  String
   destination  String
   distance  Int @default(0)
-  reservations  Trip[]
+  trips  Trip[]
 }
 
 model Trip {
@@ -27,19 +27,32 @@ model Trip {
   routeId  String
   classMultiplier String
   
-  flightDate DateTime
+  flightDate DateTime  @db.Date
   flightTime Int
   landingTime Int
 
+  airlineId    String 
+  airline    Airline    @relation(fields: [airlineId], references: [id])
   price   Int @default(0)
-  Route    Route    @relation(fields: [routeId], references: [id])
-  users Reservation[]
+  route    Route    @relation(fields: [routeId], references: [id])
+  orders Order[]
+}
+
+model Airline {
+  id            String        @id @default(uuid())
+  name String
+  trip  Trip[]
 }
 
 model User {
   id            String        @id 
   email         String     @unique
-  name          String?
+  fullName      String?
+  nationalCode  String?
+  phoneNumber   String?
+  gender  String @default("male")
+  nationality   String?
+  dateOfBirth     String?
   role          String     @default("USER")
   emailVerified Boolean    @default(false)
   image         String?
@@ -49,7 +62,7 @@ model User {
   accounts      Account[]
 
   travelers  Traveler[]
-
+  orders    Order[]
   @@map("user")
 }
 
@@ -61,18 +74,24 @@ model Traveler {
   gender   String
   nationality String
   userId String
-  reservationTrips  Reservation[]
+  orders  Order[]
   user User @relation(fields: [userId], references: [id])
 }
 
-model Reservation {
+model Order {
   id String @id @default(uuid())
+  status  String
+  pnrCode String?
 
+  userId String
   tripId String
   travelerId String
 
+  user User @relation(fields: [userId], references: [id])
   traveler Traveler @relation(fields: [travelerId], references: [id])
   trip Trip @relation(fields: [tripId], references: [id])
+
+  @@unique([tripId , travelerId ,pnrCode ])
 }
 
 model Session {

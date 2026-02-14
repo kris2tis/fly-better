@@ -1,5 +1,4 @@
-import moment from "jalali-moment";
-import prisma from "../../../lib/prisma";
+import prisma from "../../../../lib/prisma";
 import { converToSecound } from "@/shared/function/hellpers";
 // import { changeDateToJalaaliDate } from "@/shared/function/hellpers";
 const FuelCostPerKm = 25000;
@@ -15,8 +14,9 @@ export async function addTrip(body) {
     flightDate,
     flightTime,
     landingTime,
+    airlineId,
   } = body;
-  // const flightDate = changeDateToJalaaliDate(date);
+
   if (!routeId) {
     throw new Error("لطفا یک مسیر انتخاب کنید");
   }
@@ -24,15 +24,16 @@ export async function addTrip(body) {
   if (!capacity) {
     throw new Error("لطفا ظرفیت سفر را انتخاب کنید");
   }
+  const [y, m, d] = flightDate.split("-");
+  const date = new Date(Date.UTC(y, m - 1, d));
 
   const route = await prisma.route.findUnique({
     where: { id: routeId },
     select: { distance: true },
   });
   const [flightTimeSeconds, landingTimeSeconds] = [flightTime, landingTime].map(
-    (t) => converToSecound(t)
+    (t) => converToSecound(t),
   );
-  console.log("__________",flightTimeSeconds, landingTimeSeconds)
   const price = priceCalculation(classMultiplier, route.distance, capacity);
 
   await prisma.trip.create({
@@ -41,9 +42,10 @@ export async function addTrip(body) {
       capacity: parseInt(capacity),
       price,
       classMultiplier,
-      flightDate: new Date(flightDate),
-      flightTime:flightTimeSeconds,
-      landingTime:landingTimeSeconds,
+      flightDate: new Date(date),
+      flightTime: flightTimeSeconds,
+      landingTime: landingTimeSeconds,
+      airlineId: airlineId,
     },
   });
 
@@ -53,13 +55,9 @@ export async function addTrip(body) {
 const priceCalculation = (
   classMultiplier = "Economy",
   distance = 0,
-  capacity = 0
+  capacity = 0,
 ) => {
   const fuelCost = distance * FuelCostPerKm;
   const tripCost = FixedCost + fuelCost;
   return (tripCost / capacity) * classMultipliers[classMultiplier];
 };
-
-//  تبدیل تایم به ثانیه
-// گرفتن پرواز هایی که تاریخ بزرگ تر از انتخاب کاربر دارند و زمانشون هم بزرگتر از الان هست
-// به حاظر اینکه ما میخوام بلیط هایی رو بگیریم که هنوز وقط برای گرفتن داریم

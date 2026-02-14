@@ -1,23 +1,59 @@
+"use client";
+
+import { authClient } from "../../../../lib/auth-client";
+
+import { useModal } from "@/shared/stores/modal-store";
+import Button from "../ui/button";
+import BackButton from "../ui/back-button";
+
 import Link from "next/link";
-import React from "react";
+import Image from "next/image";
 
 export default function Header() {
+  const { openModal } = useModal();
+  const session = authClient.useSession();
+  const user = session?.data?.session?.id;
   return (
-    <header className="w-full flex justify-between border-b border-b-gray-300 py-3 ">
-      <div className="flex items-center gap-x-3">
-        <Link href="/">
-          <span className="font-semibold text-lg">فلای بتر</span>
-        </Link>
-        <Link href="/flight">
-          <span>پرواز ها</span>
-        </Link>
-      </div>
-      <div>
-        <button className="border border-gray-300 p-2 rounded-md text-xs">
-          <Link href="/auth">
-            <span className="">ورود | ثبت نام</span>
+    <header className="sticky top-0 z-50 text-xs bg-white">
+      <div className="relative h-15 max-w-7xl mx-auto px-4 lg:px-0 py-3 flex items-center justify-start lg:justify-between border-b border-gray-300">
+        <div className="absolute left-1/2 -translate-x-1/2 lg:static h-15 aspect-video">
+          <Link href={"/"}>
+            <Image
+              src={
+                "https://cdn-a.cdnfl2.ir/upload/flytoday/public/white-labels/flytoday/images/logo.svg?version=1"
+              }
+              alt="fly-today icon"
+              fill
+            />
           </Link>
-        </button>
+        </div>
+
+        <div className=" flex items-center justify-between gap-10">
+          <BackButton />
+
+          {/* <nav className="hidden lg:flex items-center gap-8 text-xs">
+            {["پروازها", "هتل‌ها", "قطارها", "پشتیبانی"].map((item) => (
+              <a
+                key={item}
+                className="text-slate-700 hover:text-primary transition-colors"
+                href="#"
+              >
+                {item}
+              </a>
+            ))}
+          </nav> */}
+        </div>
+
+        <Button className="hidden lg:block" variant="secondary">
+          {user ? (
+            <Link href={`/profile/dashboard`}>حساب کاربری</Link>
+          ) : (
+            <div onClick={() => openModal("auth/sign-up")}>
+              <span className=" border-l pl-2 border-l-gray-300">ورود</span>
+              <span className=" pr-2">ثبت نام</span>
+            </div>
+          )}
+        </Button>
       </div>
     </header>
   );
