@@ -18,13 +18,9 @@ export default function Header() {
       <div className="relative h-15 max-w-7xl mx-auto px-4 lg:px-0 py-3 flex items-center justify-start lg:justify-between border-b border-gray-300">
         <div className="absolute left-1/2 -translate-x-1/2 lg:static h-15 aspect-video">
           <Link href={"/"}>
-            <Image
-              src={
-                "https://cdn-a.cdnfl2.ir/upload/flytoday/public/white-labels/flytoday/images/logo.svg?version=1"
-              }
-              alt="fly-today icon"
-              fill
-            />
+            <div className="relative h-full">
+              <Image src={"/brand/text-logo.svg"} alt="fly-today icon" fill />
+            </div>
           </Link>
         </div>
 
