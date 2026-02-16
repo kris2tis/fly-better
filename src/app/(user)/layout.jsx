@@ -1,5 +1,12 @@
 import Header from "../../shared/components/layouts/header";
 
+export const metadata = {
+  title: {
+    template: " فلای بتر | %s",
+    default: "فلای بتر", 
+  },
+};
+
 export default function Layout({ children }) {
   return (
     <>

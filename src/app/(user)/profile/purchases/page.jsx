@@ -1,6 +1,11 @@
 import { getOrderList } from "@/shared/function/services";
 import OrderList from "../../../../features/order/components/order-list";
 
+export const metadata = {
+  title: "سفارش‌های من",
+  description: "لیست سفارش‌ها و وضعیت خریدهای شما در Fly Betteer.",
+};
+
 export default async function page() {
   const orderlist = await getOrderList();
 

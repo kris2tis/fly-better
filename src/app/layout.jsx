@@ -12,6 +12,16 @@ export const yekanBakh = localFont({
   variable: "--yekan-font",
 });
 
+export const metadata = {
+  title: "فلای بتر",
+  description: "جستجو و خرید آسان بلیط هواپیما — Fly Betteer. پروازها، رزروها و مدیریت حساب کاربری شما.",
+  icons: "/brand/logo-icon.svg",
+  openGraph: {
+    title: "Fly Betteer — خرید بلیط هواپیما",
+    description: "جستجو و خرید آسان بلیط هواپیما — Fly Betteer.",
+  },
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="rtl">

@@ -1,5 +1,9 @@
 import FlightList from "@/features/flight/components/flight-list";
 import SortDate from "@/features/flight/components/sort-date";
+export const metadata = {
+  title: "پروازها",
+  description: "جستجو و مشاهده پروازها، پیشنهادات و اخبار در فلای بتر",
+};
 
 export default async function Page({ searchParams }) {
   const searchQuery = await searchParams;
