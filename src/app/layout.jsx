@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="rtl">
       <head>
-        <link rel="icon" href="/brand/logo-icon.svg" />
+        <link rel="icon" href="/brand/favicon.svg" />
       </head>
       <body
         className={`${yekanBakh.variable} flex flex-col font-display overflow-x-hidden`}
