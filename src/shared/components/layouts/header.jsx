@@ -30,18 +30,6 @@ export default function Header() {
 
         <div className=" flex items-center justify-between gap-10">
           <BackButton />
-
-          <nav className="hidden lg:flex items-center gap-8 text-xs">
-            {["پروازها", "هتل‌ها", "قطارها", "پشتیبانی"].map((item) => (
-              <a
-                key={item}
-                className="text-slate-700 hover:text-primary transition-colors"
-                href="#"
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
         </div>
 
         <Button className="hidden lg:block" variant="secondary">
